@@ -1,0 +1,8 @@
+[
+    {"titulo": "Dom Casmurro", "isbn": 9788535910663, "quantidade_total": 3, "quantidade_disponivel": 3},
+    {"titulo": "O Cortiço", "isbn": 9788572326007, "quantidade_total": 2, "quantidade_disponivel": 2},
+    {"titulo": "Memórias Póstumas de Brás Cubas", "isbn": 9788525406958, "quantidade_total": 1, "quantidade_disponivel": 1},
+    {"titulo": "Grande Sertão: Veredas", "isbn": 9788535920365, "quantidade_total": 2, "quantidade_disponivel": 2},
+    {"titulo": "Vidas Secas", "isbn": 9788535909896, "quantidade_total": 4, "quantidade_disponivel": 4},
+    {"titulo": "Capitães da Areia", "isbn": 9788528617285, "quantidade_total": 2, "quantidade_disponivel": 2}
+]
