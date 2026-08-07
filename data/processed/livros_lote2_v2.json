@@ -1,0 +1,17 @@
+[
+    {
+        "titulo": "Macunaíma",
+        "isbn": 9788582850411,
+        "quantidade_total": 4
+    },
+    {
+        "titulo": "O Alienista",
+        "isbn": 9788563560933,
+        "quantidade_total": 3
+    },
+    {
+        "titulo": "São Bernardo",
+        "isbn": 9788501066657,
+        "quantidade_total": 2
+    }
+]
