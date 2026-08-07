@@ -1,46 +1,67 @@
 # BiblioTrack
 
-Sistema de gestão de biblioteca desenvolvido para consolidar conceitos de banco de dados relacional, ORM e migrações versionadas.
+Sistema de gestão de biblioteca desenvolvido para consolidar conceitos de banco de dados relacional, ORM, migrações versionadas e, na v2, uma API REST assíncrona.
 
 ## O que é o projeto
 
 O BiblioTrack é um sistema de biblioteca onde usuários cadastrados podem fazer empréstimos dos títulos disponíveis, com prazo de 7 dias para devolução. O sistema impede empréstimos quando não há exemplares disponíveis e controla o estoque automaticamente a cada empréstimo e devolução.
 
+A v2 expõe todas essas operações via API REST (FastAPI), além de manter os scripts originais de linha de comando.
+
 ## Tecnologias usadas
 
-- **SQLAlchemy**: definição das tabelas como classes Python (`models.py`), incluindo relacionamentos entre `Livro`, `Usuario` e `Emprestimo` via chave estrangeira. Também utilizado para a conexão com o banco (`Engine`) e para todas as operações de dado através de `Session` (inserir, buscar, atualizar, deletar).
-- **Alembic**: gerenciamento versionado da estrutura do banco de dados. Essa decisão foi tomada visando a segurança da estrutura quando for necessário adicionar novas colunas ou revisar regras de cada coluna, mantendo o histórico de mudanças preservado em `alembic/versions/`.
-- **Pandas**: análise dos livros mais emprestados, utilizando uma query SQL (`LEFT JOIN` + `GROUP BY`) para buscar apenas os dados relevantes do banco e apresentá-los como DataFrame.
+- **FastAPI**: API REST assíncrona expondo CRUD completo para usuários, livros e empréstimos, com validação de dados via Pydantic e documentação interativa automática (`/docs`).
+- **SQLAlchemy (async)**: definição das tabelas como classes Python (`models.py`), com relacionamentos entre `Livro`, `Usuario` e `Emprestimo` via chave estrangeira. As rotas da API usam `AsyncSession` com driver `aiosqlite`.
+- **Alembic**: gerenciamento versionado da estrutura do banco de dados, mantendo o histórico de mudanças em `alembic/versions/`.
+- **Pandas**: análise dos livros mais emprestados, via query SQL (`LEFT JOIN` + `GROUP BY`).
 - **SQLite**: banco de dados relacional usado no projeto.
 
-## O que ele faz
+## API (v2)
 
-**Cadastro de livros e usuários** (`cadastro_livro.py`, `cadastro_usuario.py`): leem os arquivos `data/livros.json` e `data/usuarios.json`, transformam cada entrada em um objeto (`Livro`/`Usuario`), e inserem no banco via `Session.add_all()`. Atualmente essa leitura é limitada a um arquivo fixo por execução — melhorias para importação incremental estão sendo consideradas para versões futuras.
+Rotas disponíveis, documentadas em `/docs` ao rodar o servidor:
 
-**Empréstimo** (`emprestar_livro.py`): solicita o ID do livro e o ID do usuário. O programa busca ambos no banco, verifica se o livro está disponível (`quantidade_disponivel > 0`) e, em caso positivo, cria um novo registro em `emprestimos` (com prazo de devolução calculado como hoje + 7 dias) e diminui a quantidade disponível do livro em 1. As duas mudanças acontecem na mesma transação, garantindo que nunca fiquem dessincronizadas.
+- `GET/POST/PUT/DELETE /usuarios` — CRUD de usuários
+- `GET/POST/DELETE /livros` — CRUD de livros
+- `POST /emprestimos` — solicitar empréstimo (bloqueia se não houver exemplar disponível)
+- `POST /emprestimos/devolucao/{id}` — registrar devolução
+- `DELETE /emprestimos/{id}` — remover empréstimo
 
-**Devolução** (`devolver_livro.py`): solicita o ID do empréstimo. O programa verifica se o empréstimo existe e se ainda não foi devolvido (checando se `data_devolucao_real` está vazia). Se for uma devolução válida, preenche a data de devolução com a data atual e devolve 1 unidade ao estoque do livro.
+Usuários e livros com empréstimo vinculado não podem ser deletados (integridade referencial verificada antes da exclusão).
 
-**Relatório** (`relatorio.py`): consulta os livros mais emprestados usando `LEFT JOIN` entre `livros` e `emprestimos`, garantindo que livros nunca emprestados também apareçam no relatório (com contagem zero).
+Uma view SQL (`emprestimos_detalhados`) junta as três tabelas para consulta legível direto no banco.
+
+## Cadastro em lote
+
+`cadastro_usuario.py` e `cadastro_livro.py` leem todos os arquivos `.json` de `data/raw/usuarios` e `data/raw/livros`, processam cada registro individualmente (pulando duplicatas sem interromper o lote) e movem os arquivos processados para `data/processed`. Um resumo final mostra quantos registros foram cadastrados e quantos falharam.
+
+## Empréstimo e devolução (scripts originais)
+
+**Empréstimo** (`emprestar_livro.py`): busca livro e usuário, verifica disponibilidade e cria o registro com prazo de 7 dias, decrementando o estoque na mesma transação.
+
+**Devolução** (`devolver_livro.py`): verifica se o empréstimo existe e ainda não foi devolvido, registra a data de devolução e devolve 1 unidade ao estoque.
+
+**Relatório** (`relatorio.py`): livros mais emprestados via `LEFT JOIN`, incluindo os nunca emprestados (contagem zero).
 
 ## Estrutura do projeto
 
 ```
 projeto_03_Bibliotrack/
-├── models.py              # Classes SQLAlchemy: Livro, Usuario, Emprestimo (+ engine)
-├── cadastro_livro.py       # Popula a tabela livros a partir de data/livros.json
-├── cadastro_usuario.py     # Popula a tabela usuarios a partir de data/usuarios.json
-├── emprestar_livro.py      # Regra de negócio: registrar um novo empréstimo
-├── devolver_livro.py       # Regra de negócio: registrar a devolução de um empréstimo
-├── relatorio.py            # Relatório de livros mais emprestados (Pandas)
-├── alembic.ini              # Configuração do Alembic (aponta para o banco)
+├── main.py                 # API FastAPI (CRUD + regras de negócio)
+├── models.py                # Classes SQLAlchemy: Livro, Usuario, Emprestimo
+├── cadastro_livro.py        # Cadastro em lote a partir de data/raw/livros
+├── cadastro_usuario.py      # Cadastro em lote a partir de data/raw/usuarios
+├── emprestar_livro.py       # Script original: registrar empréstimo via terminal
+├── devolver_livro.py        # Script original: registrar devolução via terminal
+├── relatorio.py             # Relatório de livros mais emprestados (Pandas)
+├── alembic.ini
 ├── alembic/
-│   ├── env.py                # Conecta o Alembic às classes de models.py
-│   └── versions/              # Histórico de migrações do banco
+│   ├── env.py
+│   └── versions/
 ├── data/
-│   ├── livros.json            # Dados de exemplo para popular livros
-│   ├── usuarios.json          # Dados de exemplo para popular usuários
-│   └── bibliotrack.db          # Banco de dados SQLite (gerado localmente, não versionado)
+│   ├── raw/usuarios/         # Arquivos JSON a processar
+│   ├── raw/livros/           # Arquivos JSON a processar
+│   ├── processed/            # Arquivos já processados
+│   └── bibliotrack.db        # Banco SQLite (gerado localmente, não versionado)
 └── requirements.txt
 ```
 
@@ -51,31 +72,31 @@ projeto_03_Bibliotrack/
    pip install -r requirements.txt
    ```
 
-2. A partir da raiz do projeto, aplique as migrações para criar a estrutura do banco:
+2. Aplique as migrações:
    ```bash
    alembic upgrade head
    ```
-   Isso cria o arquivo `data/bibliotrack.db` com as tabelas `livros`, `usuarios` e `emprestimos`.
 
-3. Popule o banco com os dados de exemplo:
+3. Popule o banco (coloque arquivos `.json` em `data/raw/usuarios` e `data/raw/livros` antes):
    ```bash
-   python cadastro_livro.py
    python cadastro_usuario.py
+   python cadastro_livro.py
    ```
 
-4. Use as funções de negócio:
+4. Suba a API:
    ```bash
-   python emprestar_livro.py
-   python devolver_livro.py
+   uvicorn main:app --reload
    ```
+   Documentação interativa em `http://127.0.0.1:8000/docs`.
 
-5. Veja o relatório de livros mais emprestados:
-   ```bash
-   python relatorio.py
-   ```
+## Limitações conhecidas
 
-## Melhorias futuras
+- **Persistência em produção:** o banco usa SQLite como arquivo local. Em plataformas de deploy com sistema de arquivos efêmero (ex: camada gratuita do Render), os dados podem ser resetados a cada reinicialização. Migrar para um banco hospedado (PostgreSQL) resolveria isso.
+- A API ainda não tem autenticação — qualquer cliente que conheça a URL pode chamar qualquer rota.
 
-- Importação incremental de livros/usuários (sem necessidade de sobrescrever o arquivo JSON inteiro)
-- Exposição das funções de empréstimo/devolução via API (FastAPI)
-- Relatório adicional de empréstimos em atraso
+## Próximos passos
+
+- Autenticação (API key ou OAuth2)
+- Migração para PostgreSQL
+- Frontend no-code consumindo a API
+- Containerização com Docker
