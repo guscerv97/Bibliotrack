@@ -1,12 +1,22 @@
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Depends, Header
 from pydantic import BaseModel
 from datetime import date, timedelta
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession
 from models import Usuario, Livro, Emprestimo
+import os
+from dotenv import load_dotenv
 
 
 conexao = create_async_engine('sqlite+aiosqlite:///data/bibliotrack.db')
+
+load_dotenv()
+
+API_KEY = os.getenv('API_KEY')
+
+def verificar_api_key(x_api_key: str = Header(...)):
+    if x_api_key != API_KEY:
+        raise HTTPException(status_code=401, detail= 'Chave de API inválida')
 
 class UsuarioCreate(BaseModel):
     nome: str
@@ -18,6 +28,8 @@ class CadastroLivro(BaseModel):
     quantidade_total : int
 
 app = FastAPI()
+
+
 
 @app.get("/")
 def home():
@@ -56,19 +68,21 @@ async def cadastro_usuario(usuario_id : int):
     except:
         raise HTTPException(status_code=400, detail="Usuario não localizado")
 
-@app.post("/usuarios")
+@app.post("/usuarios", dependencies=[Depends(verificar_api_key)])
 async def criar_usuario(usuario: UsuarioCreate):
     try:
         async with AsyncSession(conexao) as session:
             novo_usuario = Usuario(nome = usuario.nome, email=usuario.email)
             session.add(novo_usuario)
+            novo_usuario_nome = novo_usuario.nome
+            novo_usuario_email = novo_usuario.email
             await session.commit()
-            return {"mensagem" : "Usuario cadastrado com sucesso", "nome":novo_usuario.nome, "email": novo_usuario.email}
+            return {"mensagem" : "Usuario cadastrado com sucesso", "nome":novo_usuario_nome, "email": novo_usuario_email}
         
     except:
         raise HTTPException(status_code=400, detail="Email já cadastrado")
     
-@app.post("/livros")
+@app.post("/livros", dependencies=[Depends(verificar_api_key)])
 async def cadastro_livro(livro: CadastroLivro):
     try:
         async with AsyncSession(conexao) as session:
@@ -81,7 +95,7 @@ async def cadastro_livro(livro: CadastroLivro):
         raise HTTPException(status_code= 400, detail= "Livro já cadastrado")
 
 
-@app.delete("/usuarios/{usuario_id}")
+@app.delete("/usuarios/{usuario_id}", dependencies=[Depends(verificar_api_key)])
 async def deletar_usuario(usuario_id:int):
         async with AsyncSession(conexao) as session:
             usuario = await session.get(Usuario, usuario_id)
@@ -98,7 +112,7 @@ async def deletar_usuario(usuario_id:int):
             await session.commit()
             return {"mensagem": "Usuário removido com sucesso"}
 
-@app.put("/usuarios/{usuario_id}")
+@app.put("/usuarios/{usuario_id}", dependencies=[Depends(verificar_api_key)])
 async def atualizar_usuario(usuario_id:int, dados: UsuarioCreate):
     async with AsyncSession(conexao) as session:
         usuario = await session.get(Usuario, usuario_id)
@@ -106,8 +120,9 @@ async def atualizar_usuario(usuario_id:int, dados: UsuarioCreate):
             raise HTTPException(status_code=404, detail="Usuário não encontrado")
         usuario.nome = dados.nome
         usuario.email = dados.email
+        novo_nome = usuario.nome
         await session.commit()
-        return {"mensagem" : f"Dados do usuario {usuario.nome} atualizados com sucesso"}
+        return {"mensagem" : f"Dados do usuario {novo_nome} atualizados com sucesso"}
 
 @app.post("/emprestimos")
 async def solicitar_emprestimo(livro_id: int, usuario_id: int):
@@ -147,7 +162,7 @@ async def devolucao_livro(emprestimo_id:int):
         await session.commit()
         return {"Mensagem" : f"O livro {livro_devolvido} foi devolvido com sucesso!"}
 
-@app.delete("/livros/{livro_id}")
+@app.delete("/livros/{livro_id}", dependencies=[Depends(verificar_api_key)])
 async def deletar_livro(livro_id: int):
     async with AsyncSession(conexao) as session:
         livro = await session.get(Livro, livro_id)
@@ -164,7 +179,7 @@ async def deletar_livro(livro_id: int):
         await session.commit()
         return{"Mensagem" : f"Livro {nome_livro} deletado com sucesso!"}
 
-@app.delete("/emprestimos/{emprestimo_id}")
+@app.delete("/emprestimos/{emprestimo_id}", dependencies=[Depends(verificar_api_key)])
 async def deletar_emprestimo(emprestimo_id : int):
     async with AsyncSession(conexao) as session:
         emprestimo = await session.get(Emprestimo, emprestimo_id)

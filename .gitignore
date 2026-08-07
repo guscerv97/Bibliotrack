@@ -1,0 +1,13 @@
+# Variáveis de ambiente (contém a API key, nunca commitar)
+.env
+
+# Banco de dados local (gerado por Alembic, não versionado)
+data/bibliotrack.db
+
+# Cache do Python
+__pycache__/
+*.pyc
+
+# Ambiente virtual (se houver)
+venv/
+.venv/
