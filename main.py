@@ -192,3 +192,22 @@ async def deletar_emprestimo(emprestimo_id : int):
         await session.delete(emprestimo)
         await session.commit()
         return {"Mensagem" : f"O empréstimo do livro {nome_livro} do usuário {nome_usuario} foi deletado com sucesso!"}
+
+@app.get('/usuarios/emprestimos/{usuario_id}')
+async def emprestimos_de_usuario(usuario_id:int):
+    async with AsyncSession(conexao) as session:
+        resultado = await session.execute(select(Emprestimo).where(Emprestimo.usuario_id == usuario_id))
+        emprestimos = resultado.scalars().all()
+        livros_emprestados = []
+        for emprestimo in emprestimos:
+            livro_emprestado = await session.get(Livro, emprestimo.livro_id)
+
+            livros_emprestados.append({
+                "emprestimo_id" : emprestimo.id,
+                "titulo" : livro_emprestado.titulo,
+                "data_emprestimo" : emprestimo.data_emprestimo,
+                "data_devolucao" : emprestimo.data_devolucao_prevista,
+                "data_devolucao_real": emprestimo.data_devolucao_real})
+
+    return livros_emprestados
+        
