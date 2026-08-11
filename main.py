@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends, Header
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from datetime import date, timedelta
 from sqlalchemy import select
@@ -38,6 +39,12 @@ class CadastroLivro(BaseModel):
 
 app = FastAPI()
 
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["https://bibliotrack-gamma.vercel.app"],
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["x-api-key"],
+)
 
 
 @app.get("/")
