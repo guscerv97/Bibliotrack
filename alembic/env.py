@@ -1,5 +1,7 @@
+import os
 from logging.config import fileConfig
 
+from dotenv import load_dotenv
 from sqlalchemy import engine_from_config
 from sqlalchemy import pool
 from models import Base
@@ -14,6 +16,19 @@ config = context.config
 # This line sets up loggers basically.
 if config.config_file_name is not None:
     fileConfig(config.config_file_name)
+
+load_dotenv()
+
+url = (
+    f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
+    f"@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
+)
+
+sslmode = os.getenv('POSTGRES_SSLMODE')
+if sslmode:
+    url += f"?sslmode={sslmode}"
+
+config.set_main_option("sqlalchemy.url", url)
 
 # add your model's MetaData object here
 # for 'autogenerate' support
@@ -68,7 +83,6 @@ def run_migrations_online() -> None:
         context.configure(
         connection=connection,
         target_metadata=target_metadata,
-        render_as_batch=True
 )
 
         with context.begin_transaction():

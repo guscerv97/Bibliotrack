@@ -28,14 +28,15 @@ def popular_dados():
                     novo_livro = Livro(
                         titulo = livro["titulo"],
                         isbn = livro['isbn'],
+                        genero = livro['genero'],
                         quantidade_total = livro['quantidade_total'],
                         quantidade_disponivel = livro['quantidade_total']
          )
 
                     try:
                         session.add(novo_livro)
-                        cadastrou += 1
                         session.commit()
+                        cadastrou += 1
                     except IntegrityError:
                         session.rollback()
                         print("Livro já cadastrado")

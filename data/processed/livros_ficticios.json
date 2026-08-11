@@ -1,0 +1,402 @@
+[
+  {
+    "titulo": "Segredos de Nortelândia",
+    "autor": "Pedro Almeida",
+    "sinopse": "Uma história sobre pertencimento, contada através dos olhos de um mercador itinerante, que precisa superar uma organização secreta.",
+    "isbn": 9783092327194,
+    "genero": "Suspense",
+    "quantidade_total": 4
+  },
+  {
+    "titulo": "Promessas de Aldenor",
+    "autor": "Yasmin Queiroz",
+    "sinopse": "Uma história sobre poder, contada através dos olhos de um ex-detetive aposentado, que precisa superar seus próprios medos.",
+    "isbn": 9788240084271,
+    "genero": "Romance",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "A Casa de Dravenna",
+    "autor": "Ana Nogueira",
+    "sinopse": "Uma professora de história nunca imaginou que sobreviver a um naufrágio a levaria a enfrentar uma conspiração política.",
+    "isbn": 9783493618327,
+    "genero": "Terror",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "A Lâmina de Marovento",
+    "autor": "Zeca Queiroz",
+    "sinopse": "Depois de uma tempestade destruir sua cidade natal, uma professora de história embarca numa jornada para encontrar a cura para uma doença misteriosa.",
+    "isbn": 9798755886758,
+    "genero": "Fantasia",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "As Crônicas de Kaelen",
+    "autor": "Vinícius Gonçalves",
+    "sinopse": "Uma professora de história nunca imaginou que perder a memória a levaria a enfrentar uma conspiração política.",
+    "isbn": 9790142940197,
+    "genero": "Fantasia",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "A Órbita de Ventura Nova",
+    "autor": "Isabela Henriques",
+    "sinopse": "Em uma floresta que ninguém ousa atravessar, um ex-detetive aposentado descobre um segredo capaz de mudar tudo o que conhecia sobre identidade.",
+    "isbn": 9780133890839,
+    "genero": "Ficção Científica",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "A Lâmina de Selvamar",
+    "autor": "Tiago Ramalho",
+    "sinopse": "Quando descobrir uma verdade sobre a própria família, uma jovem cartógrafa precisa decidir entre proteger sua família e aceitar o destino.",
+    "isbn": 9784653755647,
+    "genero": "Fantasia",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "O Legado de Vaskira",
+    "autor": "Olívia Vasconcelos",
+    "sinopse": "Em uma estação espacial abandonada, uma cientista renegada descobre um segredo capaz de mudar tudo o que conhecia sobre sobrevivência.",
+    "isbn": 9783433200377,
+    "genero": "Não-ficção",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "Filhos de Aurentis",
+    "autor": "Marina Cardoso",
+    "sinopse": "Uma história sobre identidade, contada através dos olhos de um mercador itinerante, que precisa superar uma maldição antiga.",
+    "isbn": 9791316475255,
+    "genero": "Fantasia",
+    "quantidade_total": 4
+  },
+  {
+    "titulo": "Rumo a Elystra",
+    "autor": "Sofia Siqueira",
+    "sinopse": "Quando herdar uma casa cheia de segredos, uma jovem cartógrafa precisa decidir entre revelar a verdade e confiar num estranho.",
+    "isbn": 9789671756553,
+    "genero": "Aventura",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "Máquinas de Nébula IX",
+    "autor": "Olívia Duarte",
+    "sinopse": "Em uma floresta que ninguém ousa atravessar, um ex-detetive aposentado descobre um segredo capaz de mudar tudo o que conhecia sobre sobrevivência.",
+    "isbn": 9780103105185,
+    "genero": "Ficção Científica",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "O Dossiê Vharos",
+    "autor": "Fábio Martins",
+    "sinopse": "Quando descobrir uma verdade sobre a própria família, uma professora de história precisa decidir entre confiar num estranho e fugir para sempre.",
+    "isbn": 9783430980500,
+    "genero": "Suspense",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "As Crônicas de Iskar",
+    "autor": "Gabriela Ramalho",
+    "sinopse": "Uma piloto de longa distância nunca imaginou que encontrar um mapa antigo a levaria a enfrentar uma conspiração política.",
+    "isbn": 9780801326776,
+    "genero": "Fantasia",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "A História de Tremonte",
+    "autor": "Fábio Zanotto",
+    "sinopse": "Uma piloto de longa distância nunca imaginou que receber uma carta anônima a levaria a enfrentar uma criatura que habita as sombras.",
+    "isbn": 9781845146276,
+    "genero": "Não-ficção",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "Promessas de Selvamar",
+    "autor": "Hugo Farias",
+    "sinopse": "Em uma estação espacial abandonada, uma jovem cartógrafa descobre um segredo capaz de mudar tudo o que conhecia sobre memória.",
+    "isbn": 9781607337546,
+    "genero": "Romance",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "O Ritual de Orvalho",
+    "autor": "Quésia Queiroz",
+    "sinopse": "Em uma floresta que ninguém ousa atravessar, um ex-detetive aposentado descobre um segredo capaz de mudar tudo o que conhecia sobre identidade.",
+    "isbn": 9789399091691,
+    "genero": "Terror",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "O Último Sinal de Zaffira",
+    "autor": "Yasmin Pereira",
+    "sinopse": "Um órfão criado por estranhos nunca imaginou que uma tempestade destruir sua cidade natal a levaria a enfrentar uma conspiração política.",
+    "isbn": 9780932480866,
+    "genero": "Ficção Científica",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "O Arquivo Rionegro",
+    "autor": "Wanda Ibrahim",
+    "sinopse": "Um órfão criado por estranhos nunca imaginou que herdar uma casa cheia de segredos a levaria a enfrentar uma criatura que habita as sombras.",
+    "isbn": 9799440640907,
+    "genero": "Mistério",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "Segredos de Ventura Nova",
+    "autor": "Zeca Klein",
+    "sinopse": "Uma piloto de longa distância nunca imaginou que receber uma carta anônima a levaria a enfrentar uma organização secreta.",
+    "isbn": 9785615951480,
+    "genero": "Suspense",
+    "quantidade_total": 4
+  },
+  {
+    "titulo": "Reencontro em Bellum",
+    "autor": "Yasmin Siqueira",
+    "sinopse": "Quando descobrir uma verdade sobre a própria família, um monge exilado precisa decidir entre proteger sua família e fugir para sempre.",
+    "isbn": 9787346706568,
+    "genero": "Romance",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "A Chave de Zaffira",
+    "autor": "Gabriela Werneck",
+    "sinopse": "Depois de testemunhar um crime nunca resolvido, uma professora de história embarca numa jornada para encontrar um artefato perdido.",
+    "isbn": 9790052427863,
+    "genero": "Mistério",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "A Névoa de Cassiopeia",
+    "autor": "Isabela Yamada",
+    "sinopse": "Depois de encontrar um mapa antigo, um ex-detetive aposentado embarca numa jornada para encontrar um artefato perdido.",
+    "isbn": 9796319314914,
+    "genero": "Terror",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "O Caso Marovento",
+    "autor": "Nelson Werneck",
+    "sinopse": "Uma piloto de longa distância nunca imaginou que herdar uma casa cheia de segredos a levaria a enfrentar seus próprios medos.",
+    "isbn": 9791680876030,
+    "genero": "Mistério",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "O Silêncio de Corvinha",
+    "autor": "Yasmin Nogueira",
+    "sinopse": "Uma história sobre sobrevivência, contada através dos olhos de uma piloto de longa distância, que precisa superar seus próprios medos.",
+    "isbn": 9789133412324,
+    "genero": "Suspense",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "O Último Sinal de Orvalho",
+    "autor": "Rafael Queiroz",
+    "sinopse": "Depois de descobrir uma verdade sobre a própria família, um mercador itinerante embarca numa jornada para encontrar um amor que julgava esquecido.",
+    "isbn": 9781351823371,
+    "genero": "Ficção Científica",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "A Sombra de Elystra",
+    "autor": "Isabela Werneck",
+    "sinopse": "Quando encontrar um mapa antigo, um órfão criado por estranhos precisa decidir entre revelar a verdade e confiar num estranho.",
+    "isbn": 9790305641398,
+    "genero": "Suspense",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "Ensaios sobre Marovento",
+    "autor": "Isabela Gonçalves",
+    "sinopse": "Depois de testemunhar um crime nunca resolvido, uma professora de história embarca numa jornada para encontrar um amor que julgava esquecido.",
+    "isbn": 9791079911830,
+    "genero": "Não-ficção",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "Protocolo Orvalho",
+    "autor": "João Yamada",
+    "sinopse": "Em uma floresta que ninguém ousa atravessar, um órfão criado por estranhos descobre um segredo capaz de mudar tudo o que conhecia sobre poder.",
+    "isbn": 9784709521455,
+    "genero": "Ficção Científica",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "Entre Nós e Elystra",
+    "autor": "Pedro Gonçalves",
+    "sinopse": "Uma história sobre perda, contada através dos olhos de um monge exilado, que precisa superar uma organização secreta.",
+    "isbn": 9795667010653,
+    "genero": "Romance",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "A Expedição de Vaskira",
+    "autor": "Nelson Uchoa",
+    "sinopse": "Uma história sobre perda, contada através dos olhos de uma piloto de longa distância, que precisa superar uma organização secreta.",
+    "isbn": 9793287083170,
+    "genero": "Aventura",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "Pistas de Cassiopeia",
+    "autor": "Isabela Ramalho",
+    "sinopse": "Quando testemunhar um crime nunca resolvido, um ex-detetive aposentado precisa decidir entre revelar a verdade e aceitar o destino.",
+    "isbn": 9797701436344,
+    "genero": "Mistério",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "Rumo a Dravenna",
+    "autor": "Carla Teixeira",
+    "sinopse": "Um monge exilado nunca imaginou que testemunhar um crime nunca resolvido a levaria a enfrentar uma conspiração política.",
+    "isbn": 9790748217594,
+    "genero": "Aventura",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "O Chamado de Tremonte",
+    "autor": "Pedro Martins",
+    "sinopse": "Uma professora de história nunca imaginou que encontrar um mapa antigo a levaria a enfrentar seus próprios medos.",
+    "isbn": 9799653287104,
+    "genero": "Terror",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "O Verão de Aurentis",
+    "autor": "Olívia Duarte",
+    "sinopse": "Em uma estação espacial abandonada, uma professora de história descobre um segredo capaz de mudar tudo o que conhecia sobre memória.",
+    "isbn": 9787826398214,
+    "genero": "Romance",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "Sussurros de Rionegro",
+    "autor": "Karina Martins",
+    "sinopse": "Depois de encontrar um mapa antigo, um órfão criado por estranhos embarca numa jornada para encontrar a verdade sobre seu passado.",
+    "isbn": 9796804436992,
+    "genero": "Terror",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "Reencontro em Lumenor",
+    "autor": "Olívia Siqueira",
+    "sinopse": "Depois de uma tempestade destruir sua cidade natal, uma cientista renegada embarca numa jornada para encontrar a verdade sobre seu passado.",
+    "isbn": 9791161559407,
+    "genero": "Romance",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "Perdidos em Aldenor",
+    "autor": "Isabela Klein",
+    "sinopse": "Em uma mansão à beira-mar, uma professora de história descobre um segredo capaz de mudar tudo o que conhecia sobre sobrevivência.",
+    "isbn": 9790752735459,
+    "genero": "Aventura",
+    "quantidade_total": 4
+  },
+  {
+    "titulo": "Os Exploradores de Selvamar",
+    "autor": "Lucas Cardoso",
+    "sinopse": "Em uma floresta que ninguém ousa atravessar, uma professora de história descobre um segredo capaz de mudar tudo o que conhecia sobre pertencimento.",
+    "isbn": 9788412411829,
+    "genero": "Aventura",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "Perdidos em Ventura Nova",
+    "autor": "Isabela Queiroz",
+    "sinopse": "Em uma floresta que ninguém ousa atravessar, uma professora de história descobre um segredo capaz de mudar tudo o que conhecia sobre perda.",
+    "isbn": 9788809570153,
+    "genero": "Aventura",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "A História de Ventura Nova",
+    "autor": "Carla Nogueira",
+    "sinopse": "Quando receber uma carta anônima, um monge exilado precisa decidir entre revelar a verdade e aceitar o destino.",
+    "isbn": 9784556238698,
+    "genero": "Não-ficção",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "A Órbita de Cassiopeia",
+    "autor": "João Henriques",
+    "sinopse": "Depois de perder a memória, um mercador itinerante embarca numa jornada para encontrar a verdade sobre seu passado.",
+    "isbn": 9783166587608,
+    "genero": "Ficção Científica",
+    "quantidade_total": 4
+  },
+  {
+    "titulo": "A História de Nortelândia",
+    "autor": "Bruno Farias",
+    "sinopse": "Depois de herdar uma casa cheia de segredos, um monge exilado embarca numa jornada para encontrar a cura para uma doença misteriosa.",
+    "isbn": 9797190659408,
+    "genero": "Não-ficção",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "O Verão de Iskar",
+    "autor": "Elisa Zanotto",
+    "sinopse": "Uma história sobre poder, contada através dos olhos de uma professora de história, que precisa superar uma organização secreta.",
+    "isbn": 9791236851603,
+    "genero": "Romance",
+    "quantidade_total": 4
+  },
+  {
+    "titulo": "A Névoa de Kaelen",
+    "autor": "Xavier Esteves",
+    "sinopse": "Um ex-detetive aposentado nunca imaginou que encontrar um mapa antigo a levaria a enfrentar uma organização secreta.",
+    "isbn": 9798657809138,
+    "genero": "Terror",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "O Beco Lumenor",
+    "autor": "Sofia Martins",
+    "sinopse": "Em uma mansão à beira-mar, uma jovem cartógrafa descobre um segredo capaz de mudar tudo o que conhecia sobre pertencimento.",
+    "isbn": 9787028951712,
+    "genero": "Suspense",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "O Desaparecimento de Elystra",
+    "autor": "Quésia Ramalho",
+    "sinopse": "Uma história sobre memória, contada através dos olhos de um monge exilado, que precisa superar uma conspiração política.",
+    "isbn": 9787743487343,
+    "genero": "Mistério",
+    "quantidade_total": 2
+  },
+  {
+    "titulo": "Guia Essencial de Estrelário",
+    "autor": "Rafael Nogueira",
+    "sinopse": "Depois de receber uma carta anônima, um mercador itinerante embarca numa jornada para encontrar a cura para uma doença misteriosa.",
+    "isbn": 9792628498772,
+    "genero": "Não-ficção",
+    "quantidade_total": 5
+  },
+  {
+    "titulo": "O Caso Vharos",
+    "autor": "Hugo Siqueira",
+    "sinopse": "Quando receber uma carta anônima, um monge exilado precisa decidir entre proteger sua família e voltar ao passado.",
+    "isbn": 9784896383461,
+    "genero": "Mistério",
+    "quantidade_total": 3
+  },
+  {
+    "titulo": "A Coroa de Aldenor",
+    "autor": "João Pereira",
+    "sinopse": "Um mercador itinerante nunca imaginou que sobreviver a um naufrágio a levaria a enfrentar uma organização secreta.",
+    "isbn": 9797190229410,
+    "genero": "Fantasia",
+    "quantidade_total": 1
+  },
+  {
+    "titulo": "A Órbita de Aurentis",
+    "autor": "Carla Werneck",
+    "sinopse": "Em um vilarejo isolado nas montanhas, um mercador itinerante descobre um segredo capaz de mudar tudo o que conhecia sobre memória.",
+    "isbn": 9795053315867,
+    "genero": "Ficção Científica",
+    "quantidade_total": 5
+  }
+]

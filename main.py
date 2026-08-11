@@ -8,9 +8,18 @@ import os
 from dotenv import load_dotenv
 
 
-conexao = create_async_engine('sqlite+aiosqlite:///data/bibliotrack.db')
-
 load_dotenv()
+
+url = (
+    f"postgresql+asyncpg://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
+    f"@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
+)
+
+sslmode = os.getenv('POSTGRES_SSLMODE')
+if sslmode:
+    url += f"?sslmode={sslmode}"
+
+conexao = create_async_engine(url)
 
 API_KEY = os.getenv('API_KEY')
 
@@ -25,6 +34,7 @@ class UsuarioCreate(BaseModel):
 class CadastroLivro(BaseModel):
     titulo : str
     isbn : int
+    genero : str
     quantidade_total : int
 
 app = FastAPI()
@@ -86,7 +96,7 @@ async def criar_usuario(usuario: UsuarioCreate):
 async def cadastro_livro(livro: CadastroLivro):
     try:
         async with AsyncSession(conexao) as session:
-            novo_livro = Livro(titulo = livro.titulo, isbn=livro.isbn, quantidade_total = livro.quantidade_total, quantidade_disponivel = livro.quantidade_total)
+            novo_livro = Livro(titulo = livro.titulo, isbn=livro.isbn, genero = livro.genero, quantidade_total = livro.quantidade_total, quantidade_disponivel = livro.quantidade_total)
             session.add(novo_livro)
             await session.commit()
             return {"Mensagem" : "Livro cadastrado com sucesso"}

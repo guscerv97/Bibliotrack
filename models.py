@@ -1,7 +1,13 @@
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column
 from datetime import date
-from sqlalchemy import func, ForeignKey, create_engine
+from sqlalchemy import BigInteger, func, ForeignKey, create_engine
 from typing import Optional
+from dotenv import load_dotenv
+import os
+
+
+load_dotenv()
+
 
 class Base(DeclarativeBase):
     pass
@@ -10,9 +16,10 @@ class Livro(Base):
     __tablename__ = "livros"
     id: Mapped[int] = mapped_column(primary_key=True)
     titulo: Mapped[str]
-    isbn: Mapped[int] = mapped_column(unique=True)
+    isbn: Mapped[int] = mapped_column(BigInteger, unique=True)
     quantidade_total: Mapped[int]
     quantidade_disponivel: Mapped[int]
+    genero: Mapped[str]
 
 class Usuario(Base):
     __tablename__ = "usuarios"
@@ -30,4 +37,13 @@ class Emprestimo(Base):
     data_devolucao_prevista: Mapped[date]
     data_devolucao_real: Mapped[Optional[date]]
 
-conexao = create_engine('sqlite:///data/bibliotrack.db')
+url = (
+    f"postgresql+psycopg2://{os.getenv('POSTGRES_USER')}:{os.getenv('POSTGRES_PASSWORD')}"
+    f"@{os.getenv('POSTGRES_HOST')}:{os.getenv('POSTGRES_PORT')}/{os.getenv('POSTGRES_DB')}"
+)
+
+sslmode = os.getenv('POSTGRES_SSLMODE')
+if sslmode:
+    url += f"?sslmode={sslmode}"
+
+conexao = create_engine(url)
