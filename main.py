@@ -172,19 +172,12 @@ async def solicitar_emprestimo(livro_id: int, usuario_id: int):
         return {"Mensagem" : f"Olá {nome_usuario}, empréstimo do livro {titulo_livro} realizado com sucesso! Devolva até {prazo_devolucao}"}
 
 @app.post("/emprestimos/devolucao/{emprestimo_id}")
-async def devolucao_livro(emprestimo_id:int, usuario_id: int):
+async def devolucao_livro(emprestimo_id:int):
     async with AsyncSession(conexao) as session:
-
-        usuario = await session.get(Usuario, usuario_id)
-        if usuario is None:
-            raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
         emprestimo = await session.get(Emprestimo, emprestimo_id)
         if emprestimo is None:
             raise HTTPException(status_code=404, detail="Empréstimo não localizado")
-
-        if emprestimo.usuario_id != usuario_id:
-            raise HTTPException(status_code=403, detail="Este empréstimo não pertence ao usuário informado")
 
         livro = await session.get(Livro, emprestimo.livro_id)
         if emprestimo.data_devolucao_real is not None:
