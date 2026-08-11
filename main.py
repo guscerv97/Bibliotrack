@@ -150,7 +150,18 @@ async def solicitar_emprestimo(livro_id: int, usuario_id: int):
             raise HTTPException(status_code=404, detail="Usuário ou Livro não encontrado")
         if livro.quantidade_disponivel == 0:
             raise HTTPException(status_code=400, detail=f"Livro {livro.titulo} não disponível")
-        
+
+        resultado = await session.execute(
+            select(Emprestimo).where(
+                Emprestimo.usuario_id == usuario_id,
+                Emprestimo.livro_id == livro_id,
+                Emprestimo.data_devolucao_real.is_(None),
+            )
+        )
+        emprestimo_ativo = resultado.scalars().first()
+        if emprestimo_ativo is not None:
+            raise HTTPException(status_code=400, detail="Usuário já possui um empréstimo ativo deste livro")
+
         novo_emprestimo = Emprestimo(usuario_id = usuario_id, livro_id = livro_id, data_emprestimo = date.today(), data_devolucao_prevista = date.today() + timedelta(days=7))
         session.add(novo_emprestimo)
         livro.quantidade_disponivel -= 1
@@ -161,13 +172,20 @@ async def solicitar_emprestimo(livro_id: int, usuario_id: int):
         return {"Mensagem" : f"Olá {nome_usuario}, empréstimo do livro {titulo_livro} realizado com sucesso! Devolva até {prazo_devolucao}"}
 
 @app.post("/emprestimos/devolucao/{emprestimo_id}")
-async def devolucao_livro(emprestimo_id:int):
+async def devolucao_livro(emprestimo_id:int, usuario_id: int):
     async with AsyncSession(conexao) as session:
+
+        usuario = await session.get(Usuario, usuario_id)
+        if usuario is None:
+            raise HTTPException(status_code=404, detail="Usuário não encontrado")
 
         emprestimo = await session.get(Emprestimo, emprestimo_id)
         if emprestimo is None:
             raise HTTPException(status_code=404, detail="Empréstimo não localizado")
-        
+
+        if emprestimo.usuario_id != usuario_id:
+            raise HTTPException(status_code=403, detail="Este empréstimo não pertence ao usuário informado")
+
         livro = await session.get(Livro, emprestimo.livro_id)
         if emprestimo.data_devolucao_real is not None:
             raise HTTPException(status_code=400, detail= "Empréstimo já devolvido")
