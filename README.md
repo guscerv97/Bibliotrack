@@ -16,7 +16,15 @@ A API está no ar em:
 
 Documentação interativa: **https://bibliotrack-api-hkqp.onrender.com/docs**
 
-Está hospedada na camada gratuita do Render, que hiberna após um período de inatividade. A primeira requisição depois disso pode demorar até um minuto enquanto o serviço reinicia.
+Está hospedada na camada gratuita do Render, que hiberna após um período de inatividade — a primeira requisição depois disso pode demorar até um minuto enquanto o serviço reinicia. O banco de dados é PostgreSQL hospedado na Neon, então os dados persistem normalmente entre deploys e reinicializações do serviço.
+
+## Frontend
+
+Um frontend em Next.js (gerado com [v0.dev](https://v0.dev), da Vercel) consome essa API e está publicado em:
+
+**https://bibliotrack-gamma.vercel.app**
+
+Ele se conecta à API através da variável de ambiente `NEXT_PUBLIC_API_URL` (sem URL hardcoded no código do frontend). O CORS da API (configurado em `main.py`) libera especificamente esse domínio, os métodos `GET`, `POST`, `PUT` e `DELETE`, e o header `x-api-key` usado nas rotas administrativas.
 
 ### Chave de API para teste
 
@@ -30,11 +38,11 @@ Rotas de leitura (`GET`) e as usadas pelo usuário final para emprestar e devolv
 
 ## Tecnologias usadas
 
-- **FastAPI**: API REST assíncrona expondo CRUD completo para usuários, livros e empréstimos, com validação de dados via Pydantic e documentação interativa automática (`/docs`).
-- **SQLAlchemy (async)**: definição das tabelas como classes Python (`models.py`), com relacionamentos entre `Livro`, `Usuario` e `Emprestimo` via chave estrangeira. As rotas da API usam `AsyncSession` com driver `aiosqlite`.
-- **Alembic**: gerenciamento versionado da estrutura do banco de dados, mantendo o histórico de mudanças em `alembic/versions/`.
+- **FastAPI**: API REST assíncrona expondo CRUD completo para usuários, livros e empréstimos, com validação de dados via Pydantic, CORS configurado para o frontend, e documentação interativa automática (`/docs`).
+- **SQLAlchemy**: definição das tabelas como classes Python (`models.py`), com relacionamentos entre `Livro`, `Usuario` e `Emprestimo` via chave estrangeira. A API (`main.py`) usa `AsyncSession` com driver `asyncpg`; os scripts de linha de comando usam a engine síncrona de `models.py`, com driver `psycopg2`.
+- **PostgreSQL (Neon)**: banco de dados relacional hospedado na Neon, usado tanto pela API publicada no Render quanto pelos scripts locais — substituiu o SQLite das versões anteriores do projeto.
+- **Alembic**: gerenciamento versionado da estrutura do banco de dados, mantendo o histórico de mudanças em `alembic/versions/` (inclui, por exemplo, a migração que adicionou a coluna `genero` a `livros`).
 - **Pandas**: análise dos livros mais emprestados, via query SQL (`LEFT JOIN` + `GROUP BY`).
-- **SQLite**: banco de dados relacional usado no projeto.
 
 ## API — rotas disponíveis
 
@@ -45,20 +53,24 @@ Rotas de leitura (`GET`) e as usadas pelo usuário final para emprestar e devolv
 - `DELETE /usuarios/{id}` 🔒 — remove usuário (bloqueado se houver empréstimo vinculado)
 - `GET /livros` — lista livros
 - `GET /livros/{id}` — busca livro por ID
-- `POST /livros` 🔒 — cadastra livro
+- `POST /livros` 🔒 — cadastra livro (inclui `genero`)
 - `DELETE /livros/{id}` 🔒 — remove livro (bloqueado se houver empréstimo vinculado)
-- `POST /emprestimos` — solicita empréstimo (bloqueia se não houver exemplar disponível)
-- `POST /emprestimos/devolucao/{id}` — registra devolução
+- `POST /emprestimos` — solicita empréstimo; bloqueia se não houver exemplar disponível ou se o usuário já tiver um empréstimo ativo (não devolvido) do mesmo livro
+- `POST /emprestimos/devolucao/{id}` — registra devolução; exige o `usuario_id` do solicitante e confirma que o empréstimo pertence a esse usuário
 - `DELETE /emprestimos/{id}` 🔒 — remove empréstimo
 - `GET /usuarios/emprestimos/{id}` — lista empréstimos de um usuário
 
 🔒 = requer a chave de API no header `x-api-key`
 
-Uma view SQL (`emprestimos_detalhados`) junta as três tabelas para consulta legível direto no banco.
+### Verificação de identidade (sem senha)
+
+As rotas de empréstimo (`POST /emprestimos`) e devolução (`POST /emprestimos/devolucao/{id}`) confirmam a identidade do usuário apenas pelo `usuario_id` informado na requisição — não existe senha, login ou sessão para o usuário final. Essa é uma decisão consciente de escopo: o projeto é de demonstração/portfólio, e essa verificação já é suficiente para expressar a regra de negócio (um usuário não pode devolver, em nome de outro, um empréstimo que não é seu). Para um sistema real com dados sensíveis, isso precisaria de autenticação de verdade (ex: login com senha, OAuth2, tokens de sessão).
 
 ## Cadastro em lote
 
-`cadastro_usuario.py` e `cadastro_livro.py` leem todos os arquivos `.json` de `data/raw/usuarios` e `data/raw/livros`, processam cada registro individualmente (pulando duplicatas sem interromper o lote) e movem os arquivos processados para `data/processed`. Um resumo final mostra quantos registros foram cadastrados e quantos falharam. Esses scripts rodam contra o banco local — não populam o banco publicado no Render.
+`cadastro_usuario.py` e `cadastro_livro.py` leem todos os arquivos `.json` de `data/raw/usuarios` e `data/raw/livros`, processam cada registro individualmente (pulando duplicatas sem interromper o lote) e movem os arquivos processados para `data/processed`. Um resumo final mostra quantos registros foram cadastrados e quantos falharam.
+
+Como esses scripts e a API publicada no Render agora apontam para o mesmo banco Postgres (Neon), rodar esses scripts localmente popula diretamente os dados que a API em produção também enxerga. Ainda assim, não existe endpoint na API para importação em massa — o cadastro em lote continua sendo um processo manual, executado localmente.
 
 ## Empréstimo e devolução (scripts originais)
 
@@ -72,23 +84,22 @@ Uma view SQL (`emprestimos_detalhados`) junta as três tabelas para consulta leg
 
 ```
 Bibliotrack/
-├── main.py                 # API FastAPI (CRUD + regras de negócio + autenticação)
-├── models.py                # Classes SQLAlchemy: Livro, Usuario, Emprestimo
-├── cadastro_livro.py        # Cadastro em lote a partir de data/raw/livros
-├── cadastro_usuario.py      # Cadastro em lote a partir de data/raw/usuarios
-├── emprestar_livro.py       # Script original: registrar empréstimo via terminal
-├── devolver_livro.py        # Script original: registrar devolução via terminal
-├── relatorio.py             # Relatório de livros mais emprestados (Pandas)
+├── main.py                   # API FastAPI (CRUD + regras de negócio + autenticação + CORS)
+├── models.py                  # Classes SQLAlchemy: Livro, Usuario, Emprestimo + engine síncrona (psycopg2)
+├── cadastro_livro.py          # Cadastro em lote a partir de data/raw/livros
+├── cadastro_usuario.py        # Cadastro em lote a partir de data/raw/usuarios
+├── emprestar_livro.py         # Script original: registrar empréstimo via terminal
+├── devolver_livro.py          # Script original: registrar devolução via terminal
+├── relatorio.py                # Relatório de livros mais emprestados (Pandas)
 ├── alembic.ini
 ├── alembic/
-│   ├── env.py
+│   ├── env.py                 # monta a URL do Postgres (Neon) a partir do .env
 │   └── versions/
 ├── data/
-│   ├── raw/usuarios/         # Arquivos JSON a processar
-│   ├── raw/livros/           # Arquivos JSON a processar
-│   ├── processed/            # Arquivos já processados
-│   └── bibliotrack.db        # Banco SQLite (gerado localmente, não versionado)
-├── .env                      # API_KEY (não versionado, ver .gitignore)
+│   ├── raw/usuarios/          # Arquivos JSON a processar
+│   ├── raw/livros/            # Arquivos JSON a processar
+│   └── processed/             # Arquivos já processados
+├── .env                        # API_KEY, POSTGRES_* (não versionado, ver .gitignore)
 └── requirements.txt
 ```
 
@@ -99,9 +110,15 @@ Bibliotrack/
    pip install -r requirements.txt
    ```
 
-2. Crie um arquivo `.env` na raiz com sua chave de API:
+2. Crie um arquivo `.env` na raiz com suas credenciais:
    ```
    API_KEY=escolha-uma-chave
+   POSTGRES_USER=seu-usuario
+   POSTGRES_PASSWORD=sua-senha
+   POSTGRES_HOST=seu-host-neon
+   POSTGRES_PORT=5432
+   POSTGRES_DB=seu-banco
+   POSTGRES_SSLMODE=require
    ```
 
 3. Aplique as migrações:
@@ -123,14 +140,10 @@ Bibliotrack/
 
 ## Limitações conhecidas
 
-- **Persistência em produção:** o banco usa SQLite como arquivo local. No Render (camada gratuita), o sistema de arquivos é efêmero — a cada novo deploy, o `alembic upgrade head` recria as tabelas do zero e qualquer dado cadastrado anteriormente é perdido. Isso já aconteceu durante o desenvolvimento e é uma limitação conhecida, não um bug. Um banco hospedado (PostgreSQL) resolveria isso.
-- Os scripts de cadastro em lote rodam localmente, contra o banco local — não há hoje uma forma de popular o banco publicado em massa, só pela API rota a rota.
-- A autenticação é uma chave de API simples, fixa, sem expiração ou usuários individuais. Para uma aplicação real, o ideal seria OAuth2 com login por usuário.
+- Os scripts de cadastro em lote (`cadastro_usuario.py`, `cadastro_livro.py`) continuam sendo executados manualmente, localmente — não existe endpoint na API para importação em massa.
+- A autenticação das rotas administrativas é uma chave de API simples, fixa, sem expiração ou usuários individuais. Para uma aplicação real, o ideal seria OAuth2 com login por usuário.
+- A identificação do usuário nas rotas de empréstimo e devolução é feita apenas pelo `usuario_id`, sem senha ou sessão (ver "Verificação de identidade" acima). É suficiente para demonstrar a regra de negócio, mas não é autenticação real — não deve ser usada como está para dados sensíveis em produção.
 
 ## Próximos passos
 
-Ficam para um próximo projeto, construído do zero:
-
-- Migração para PostgreSQL, resolvendo a persistência em produção
 - Containerização com Docker
-- Frontend consumindo a API
