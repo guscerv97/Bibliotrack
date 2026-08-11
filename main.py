@@ -16,10 +16,9 @@ url = (
 )
 
 sslmode = os.getenv('POSTGRES_SSLMODE')
-if sslmode:
-    url += f"?sslmode={sslmode}"
+connect_args = {"ssl": sslmode} if sslmode else {}
 
-conexao = create_async_engine(url)
+conexao = create_async_engine(url, connect_args=connect_args)
 
 API_KEY = os.getenv('API_KEY')
 
